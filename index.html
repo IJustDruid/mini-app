@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modern Mini App</title>
+  <title>Marketplace Mini App</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     * {
@@ -28,19 +28,13 @@
     }
 
     @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .header {
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
       padding: 30px 20px;
       background: rgba(255, 255, 255, 0.05);
       border-radius: 20px;
@@ -58,258 +52,979 @@
       background-clip: text;
     }
 
-    .status {
-      display: inline-block;
-      padding: 8px 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      font-size: 0.9em;
-      margin-top: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .status.active {
-      background: rgba(76, 175, 80, 0.2);
-      border-color: rgba(76, 175, 80, 0.4);
-      color: #4caf50;
+    .nav-tab {
+      flex: 1;
+      padding: 12px;
+      background: transparent;
+      color: #999;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .nav-tab.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.4s ease-out;
     }
 
     .card {
       background: rgba(255, 255, 255, 0.05);
       border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       transition: all 0.3s ease;
     }
 
     .card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-2px);
       border-color: rgba(255, 255, 255, 0.2);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     }
 
-    .card h2 {
-      font-size: 1.4em;
-      margin-bottom: 16px;
-      color: #ffffff;
-    }
-
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .info-row:last-child {
-      border-bottom: none;
-    }
-
-    .info-label {
-      color: #999;
-      font-size: 0.9em;
-    }
-
-    .info-value {
-      color: #fff;
-      font-weight: 500;
-    }
-
-    .button-group {
+    .product-card {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px;
-      margin-top: 20px;
+      grid-template-columns: 120px 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .product-image {
+      width: 120px;
+      height: 120px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3em;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .product-info h3 {
+      font-size: 1.2em;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .product-price {
+      font-size: 1.3em;
+      font-weight: 700;
+      color: #4caf50;
+      margin: 8px 0;
+    }
+
+    .product-seller {
+      font-size: 0.85em;
+      color: #999;
+      margin-bottom: 12px;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
     }
 
     button {
-      padding: 16px 24px;
+      padding: 12px 20px;
       background: rgba(255, 255, 255, 0.1);
       color: #ffffff;
       border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      font-size: 1em;
+      border-radius: 10px;
+      font-size: 0.95em;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
     }
 
     button:hover {
       background: rgba(255, 255, 255, 0.2);
-      border-color: rgba(255, 255, 255, 0.3);
-      transform: translateY(-2px);
-    }
-
-    button:active {
-      transform: translateY(0);
+      transform: translateY(-1px);
     }
 
     button.primary {
-      background: linear-gradient(135deg, #ffffff 0%, #d0d0d0 100%);
-      color: #000000;
+      background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+      color: #fff;
       border: none;
     }
 
     button.primary:hover {
-      background: linear-gradient(135deg, #f0f0f0 0%, #c0c0c0 100%);
-      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+      background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
     }
 
-    .counter {
-      text-align: center;
-      padding: 30px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    button.secondary {
+      background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+      color: #fff;
+      border: none;
     }
 
-    .counter-value {
-      font-size: 4em;
-      font-weight: 700;
-      color: #ffffff;
-      margin: 20px 0;
+    button.danger {
+      background: rgba(244, 67, 54, 0.2);
+      color: #f44336;
+      border-color: rgba(244, 67, 54, 0.4);
     }
 
-    .footer {
-      text-align: center;
-      margin-top: 40px;
-      padding: 20px;
-      color: #666;
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #ccc;
       font-size: 0.9em;
     }
 
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1em;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-group input:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .image-upload-area {
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .image-upload-area:hover {
+      border-color: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .image-upload-area.dragover {
+      border-color: #4caf50;
+      background: rgba(76, 175, 80, 0.1);
+    }
+
+    #imageInput {
+      display: none;
+    }
+
+    .image-preview-container {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 12px;
+    }
+
+    .image-preview {
+      position: relative;
+      width: 100%;
+      padding-bottom: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .image-preview img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image-preview-remove {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(244, 67, 54, 0.9);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      z-index: 10;
+    }
+
+    .image-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .gallery-image {
+      width: 100%;
+      padding-bottom: 100%;
+      position: relative;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .gallery-image img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      max-width: 90%;
+      max-height: 90%;
+      position: relative;
+    }
+
+    .modal-image {
+      max-width: 100%;
+      max-height: 80vh;
+      border-radius: 12px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .cart-badge {
+      position: relative;
+      display: inline-block;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #f44336;
+      color: #fff;
+      border-radius: 10px;
+      padding: 2px 6px;
+      font-size: 0.75em;
+      font-weight: 700;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+
+    .empty-state-icon {
+      font-size: 4em;
+      margin-bottom: 16px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+      background: rgba(76, 175, 80, 0.1);
+      border-radius: 12px;
+      margin-top: 16px;
+      font-size: 1.2em;
+      font-weight: 700;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
     @media (max-width: 480px) {
-      .header h1 {
-        font-size: 2em;
-      }
-      
-      .card {
-        padding: 20px;
-      }
-      
-      .counter-value {
-        font-size: 3em;
-      }
+      .header h1 { font-size: 2em; }
+      .product-card { grid-template-columns: 100px 1fr; gap: 12px; }
+      .product-image { width: 100px; height: 100px; font-size: 2.5em; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>🚀 Mini App</h1>
-      <div class="status active" id="status">● Активний</div>
+      <h1>🛒 Маркетплейс</h1>
     </div>
 
-    <div class="card">
-      <h2>📊 Інформація про користувача</h2>
-      <div class="info-row">
-        <span class="info-label">Ім'я</span>
-        <span class="info-value" id="userName">Завантаження...</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">ID</span>
-        <span class="info-value" id="userId">-</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Платформа</span>
-        <span class="info-value" id="platform">-</span>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchTab('products')">🏪 Товари</button>
+      <button class="nav-tab" onclick="switchTab('add')">➕ Додати</button>
+      <button class="nav-tab" onclick="switchTab('cart')">
+        <span class="cart-badge">
+          🛒 Кошик
+          <span class="cart-count" id="cartCount" style="display: none;">0</span>
+        </span>
+      </button>
+      <button class="nav-tab" onclick="switchTab('my')">👤 Мої</button>
+    </div>
+
+    <!-- Products Tab -->
+    <div id="products-tab" class="tab-content active">
+      <div id="productsList" class="loading">Завантаження товарів...</div>
+    </div>
+
+    <!-- Add Product Tab -->
+    <div id="add-tab" class="tab-content">
+      <div class="card">
+        <h2 style="margin-bottom: 20px;">📦 Додати новий товар</h2>
+        <form id="addProductForm">
+          <div class="form-group">
+            <label>Фото товару (до 5 фото)</label>
+            <div class="image-upload-area" id="uploadArea">
+              <div style="font-size: 3em; margin-bottom: 12px;">📸</div>
+              <div style="color: #ccc; margin-bottom: 8px;">Натисніть або перетягніть фото сюди</div>
+              <div style="font-size: 0.85em; color: #666;">JPG, PNG, GIF (макс. 5MB)</div>
+            </div>
+            <input type="file" id="imageInput" accept="image/*" multiple>
+            <div id="imagePreviewContainer" class="image-preview-container"></div>
+          </div>
+          
+          <div class="form-group">
+            <label>Назва товару *</label>
+            <input type="text" id="productName" required placeholder="Наприклад: iPhone 14 Pro">
+          </div>
+          <div class="form-group">
+            <label>Опис</label>
+            <textarea id="productDescription" placeholder="Опишіть ваш товар..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Ціна (₴) *</label>
+            <input type="number" id="productPrice" required placeholder="0" min="0" step="0.01">
+          </div>
+          <div class="form-group">
+            <label>Емодзі (іконка товару)</label>
+            <input type="text" id="productEmoji" placeholder="📱" maxlength="2">
+          </div>
+          <button type="submit" class="primary" style="width: 100%; padding: 16px;">
+            ✅ Опублікувати товар
+          </button>
+        </form>
       </div>
     </div>
 
-    <div class="card counter">
-      <h2>🎯 Лічильник</h2>
-      <div class="counter-value" id="counter">0</div>
-      <div class="button-group">
-        <button onclick="decrementCounter()">➖ Зменшити</button>
-        <button class="primary" onclick="incrementCounter()">➕ Збільшити</button>
+    <!-- Cart Tab -->
+    <div id="cart-tab" class="tab-content">
+      <div class="card">
+        <h2 style="margin-bottom: 20px;">🛒 Ваш кошик</h2>
+        <div id="cartItems"></div>
+        <div id="cartTotal"></div>
+        <button onclick="checkout()" class="primary" id="checkoutBtn" style="width: 100%; margin-top: 16px; display: none;">
+          💳 Оформити замовлення
+        </button>
       </div>
     </div>
 
-    <div class="card">
-      <h2>⚙️ Дії</h2>
-      <div class="button-group">
-        <button onclick="showAlert()">💬 Повідомлення</button>
-        <button onclick="vibrate()">📳 Вібрація</button>
-        <button onclick="shareApp()">📤 Поділитися</button>
-        <button class="primary" onclick="closeApp()">✕ Закрити</button>
-      </div>
+    <!-- My Products Tab -->
+    <div id="my-tab" class="tab-content">
+      <div id="myProductsList" class="loading">Завантаження...</div>
     </div>
+  </div>
 
-    <div class="footer">
-      Powered by Telegram Mini Apps
+  <!-- Image Modal -->
+  <div id="imageModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <img id="modalImage" class="modal-image" src="" alt="Product">
     </div>
   </div>
 
   <script>
     const tg = window.Telegram.WebApp;
-    let counter = 0;
+    let currentUser = null;
+    let cart = [];
+    let uploadedImages = [];
 
-    // Ініціалізація
     tg.ready();
     tg.expand();
 
-    // Налаштування теми
-    document.body.style.backgroundColor = tg.themeParams.bg_color || '#000000';
-    
-    // Отримання даних користувача
+    // Get user info
     if (tg.initDataUnsafe.user) {
-      const user = tg.initDataUnsafe.user;
-      document.getElementById('userName').textContent = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-      document.getElementById('userId').textContent = user.id;
+      currentUser = tg.initDataUnsafe.user;
     } else {
-      document.getElementById('userName').textContent = 'Гість';
+      currentUser = { id: 'guest_' + Date.now(), first_name: 'Гість' };
     }
 
-    // Платформа
-    document.getElementById('platform').textContent = tg.platform || 'Unknown';
+    // Initialize
+    loadProducts();
+    loadCart();
+    setupImageUpload();
 
-    // Функції лічильника
-    function incrementCounter() {
-      counter++;
-      updateCounter();
-      tg.HapticFeedback.impactOccurred('light');
-    }
+    // Image upload setup
+    function setupImageUpload() {
+      const uploadArea = document.getElementById('uploadArea');
+      const imageInput = document.getElementById('imageInput');
 
-    function decrementCounter() {
-      counter--;
-      updateCounter();
-      tg.HapticFeedback.impactOccurred('light');
-    }
+      uploadArea.addEventListener('click', () => imageInput.click());
 
-    function updateCounter() {
-      document.getElementById('counter').textContent = counter;
-    }
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+      });
 
-    // Функції дій
-    function showAlert() {
-      tg.showAlert('Це сповіщення від вашого Mini App! 🎉');
-    }
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+      });
 
-    function vibrate() {
-      tg.HapticFeedback.notificationOccurred('success');
-      tg.showPopup({
-        title: 'Вібрація',
-        message: 'Ваш пристрій вібрує! 📳',
-        buttons: [{type: 'ok'}]
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        handleFiles(e.dataTransfer.files);
+      });
+
+      imageInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
       });
     }
 
-    function shareApp() {
-      const shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(window.location.href) + 
-                       '&text=' + encodeURIComponent('Подивіться на цей крутий Mini App!');
-      tg.openLink(shareUrl);
+    function handleFiles(files) {
+      const maxFiles = 5;
+      const maxSize = 5 * 1024 * 1024; // 5MB
+
+      if (uploadedImages.length >= maxFiles) {
+        tg.showAlert(`Можна завантажити максимум ${maxFiles} фото`);
+        return;
+      }
+
+      Array.from(files).forEach(file => {
+        if (uploadedImages.length >= maxFiles) return;
+
+        if (!file.type.startsWith('image/')) {
+          tg.showAlert('Можна завантажувати тільки зображення');
+          return;
+        }
+
+        if (file.size > maxSize) {
+          tg.showAlert('Розмір файлу не повинен перевищувати 5MB');
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          uploadedImages.push(e.target.result);
+          displayImagePreviews();
+          tg.HapticFeedback.impactOccurred('light');
+        };
+        reader.readAsDataURL(file);
+      });
     }
 
-    function closeApp() {
-      tg.close();
+    function displayImagePreviews() {
+      const container = document.getElementById('imagePreviewContainer');
+      container.innerHTML = uploadedImages.map((img, index) => `
+        <div class="image-preview">
+          <img src="${img}" alt="Preview ${index + 1}">
+          <button class="image-preview-remove" onclick="removeImage(${index})">×</button>
+        </div>
+      `).join('');
     }
 
-    // Кнопка "Назад"
-    tg.BackButton.onClick(() => {
-      tg.close();
+    function removeImage(index) {
+      uploadedImages.splice(index, 1);
+      displayImagePreviews();
+      tg.HapticFeedback.impactOccurred('light');
+    }
+
+    // Tab switching
+    function switchTab(tab) {
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      event.target.closest('.nav-tab').classList.add('active');
+      document.getElementById(tab + '-tab').classList.add('active');
+
+      if (tab === 'products') loadProducts();
+      if (tab === 'my') loadMyProducts();
+      if (tab === 'cart') displayCart();
+    }
+
+    // Load all products
+    async function loadProducts() {
+      const container = document.getElementById('productsList');
+      container.innerHTML = '<div class="loading">Завантаження товарів...</div>';
+
+      try {
+        const result = await window.storage.list('product:', true);
+        
+        if (!result || !result.keys || result.keys.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">🛍️</div>
+              <h3>Поки що немає товарів</h3>
+              <p>Станьте першим, хто додасть товар!</p>
+            </div>
+          `;
+          return;
+        }
+
+        const products = [];
+        for (const key of result.keys) {
+          try {
+            const productResult = await window.storage.get(key, true);
+            if (productResult && productResult.value) {
+              products.push(JSON.parse(productResult.value));
+            }
+          } catch (e) {
+            console.error('Error loading product:', e);
+          }
+        }
+
+        products.sort((a, b) => b.timestamp - a.timestamp);
+        displayProducts(products, container);
+      } catch (error) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🛍️</div>
+            <h3>Товари поки не додані</h3>
+            <p>Додайте перший товар у розділі "Додати"</p>
+          </div>
+        `;
+      }
+    }
+
+    // Display products
+    function displayProducts(products, container) {
+      if (products.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🛍️</div>
+            <h3>Товарів не знайдено</h3>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = products.map(product => {
+        const mainImage = product.images && product.images.length > 0 
+          ? `<img src="${product.images[0]}" alt="${escapeHtml(product.name)}">`
+          : product.emoji || '📦';
+        
+        const imageGallery = product.images && product.images.length > 1
+          ? `<div class="image-gallery">
+              ${product.images.slice(1, 4).map((img, idx) => `
+                <div class="gallery-image" onclick='openImageModal("${img}")'>
+                  <img src="${img}" alt="Image ${idx + 2}">
+                </div>
+              `).join('')}
+              ${product.images.length > 4 ? `<div class="gallery-image" style="background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: 700;">+${product.images.length - 4}</div>` : ''}
+            </div>`
+          : '';
+
+        return `
+          <div class="card">
+            <div class="product-card">
+              <div class="product-image" ${product.images && product.images.length > 0 ? `onclick='openImageModal("${product.images[0]}")'` : ''} style="${product.images && product.images.length > 0 ? 'cursor: pointer;' : ''}">
+                ${mainImage}
+              </div>
+              <div class="product-info">
+                <h3>${escapeHtml(product.name)}</h3>
+                <div class="product-seller">👤 ${escapeHtml(product.sellerName)}</div>
+                <p style="color: #ccc; font-size: 0.9em; margin-bottom: 8px;">${escapeHtml(product.description || '')}</p>
+                ${imageGallery}
+                <div class="product-price">${product.price} ₴</div>
+                <div class="product-actions">
+                  <button class="primary" onclick='addToCart(${JSON.stringify(product).replace(/'/g, "&apos;")})'>
+                    🛒 В кошик
+                  </button>
+                  <button class="secondary" onclick='viewProduct(${JSON.stringify(product).replace(/'/g, "&apos;")})'>
+                    👁️ Детальніше
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Add product form
+    document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('productName').value.trim();
+      const description = document.getElementById('productDescription').value.trim();
+      const price = parseFloat(document.getElementById('productPrice').value);
+      const emoji = document.getElementById('productEmoji').value.trim() || '📦';
+
+      if (!name || price <= 0) {
+        tg.showAlert('Будь ласка, заповніть всі обов\'язкові поля');
+        return;
+      }
+
+      const product = {
+        id: 'prod_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        name,
+        description,
+        price,
+        emoji,
+        images: uploadedImages,
+        sellerId: currentUser.id,
+        sellerName: currentUser.first_name,
+        timestamp: Date.now()
+      };
+
+      try {
+        await window.storage.set('product:' + product.id, JSON.stringify(product), true);
+        
+        tg.showPopup({
+          title: 'Успіх!',
+          message: 'Ваш товар успішно додано до маркетплейсу 🎉',
+          buttons: [{type: 'ok'}]
+        });
+
+        document.getElementById('addProductForm').reset();
+        uploadedImages = [];
+        displayImagePreviews();
+        tg.HapticFeedback.notificationOccurred('success');
+        
+        switchTab('products');
+        loadProducts();
+      } catch (error) {
+        tg.showAlert('Помилка при додаванні товару. Спробуйте ще раз.');
+      }
     });
-  </script>
-</body>
-</html>
+
+    // Load my products
+    async function loadMyProducts() {
+      const container = document.getElementById('myProductsList');
+      container.innerHTML = '<div class="loading">Завантаження ваших товарів...</div>';
+
+      try {
+        const result = await window.storage.list('product:', true);
+        
+        if (!result || !result.keys || result.keys.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">📦</div>
+              <h3>У вас ще немає товарів</h3>
+              <p>Перейдіть у розділ "Додати" щоб опублікувати товар</p>
+            </div>
+          `;
+          return;
+        }
+
+        const myProducts = [];
+        for (const key of result.keys) {
+          try {
+            const productResult = await window.storage.get(key, true);
+            if (productResult && productResult.value) {
+              const product = JSON.parse(productResult.value);
+              if (product.sellerId === currentUser.id) {
+                myProducts.push(product);
+              }
+            }
+          } catch (e) {
+            console.error('Error loading product:', e);
+          }
+        }
+
+        if (myProducts.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">📦</div>
+              <h3>У вас ще немає товарів</h3>
+              <p>Перейдіть у розділ "Додати" щоб опублікувати товар</p>
+            </div>
+          `;
+          return;
+        }
+
+        myProducts.sort((a, b) => b.timestamp - a.timestamp);
+        displayMyProducts(myProducts, container);
+      } catch (error) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📦</div>
+            <h3>У вас ще немає товарів</h3>
+          </div>
+        `;
+      }
+    }
+
+    // Display my products
+    function displayMyProducts(products, container) {
+      container.innerHTML = products.map(product => {
+        const mainImage = product.images && product.images.length > 0 
+          ? `<img src="${product.images[0]}" alt="${escapeHtml(product.name)}">`
+          : product.emoji || '📦';
+
+        return `
+          <div class="card">
+            <div class="product-card">
+              <div class="product-image">
+                ${mainImage}
+              </div>
+              <div class="product-info">
+                <h3>${escapeHtml(product.name)}</h3>
+                <p style="color: #ccc; font-size: 0.9em; margin-bottom: 8px;">${escapeHtml(product.description || '')}</p>
+                ${product.images && product.images.length > 0 ? `<div style="font-size: 0.85em; color: #999; margin-bottom: 8px;">📸 ${product.images.length} фото</div>` : ''}
+                <div class="product-price">${product.price} ₴</div>
+                <div class="product-actions">
+                  <button class="danger" onclick='deleteProduct("${product.id}")'>
+                    🗑️ Видалити
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Delete product
+    async function deleteProduct(productId) {
+      tg.showPopup({
+        title: 'Видалити товар?',
+        message: 'Ця дія незворотна',
+        buttons: [
+          {id: 'delete', type: 'destructive', text: 'Видалити'},
+          {type: 'cancel'}
+        ]
+      }, async (buttonId) => {
+        if (buttonId === 'delete') {
+          try {
+            await window.storage.delete('product:' + productId, true);
+            tg.HapticFeedback.notificationOccurred('success');
+            loadMyProducts();
+          } catch (error) {
+            tg.showAlert('Помилка при видаленні товару');
+          }
+        }
+      });
+    }
+
+    // Cart functions
+    function loadCart() {
+      const saved = localStorage.getItem('cart_' + currentUser.id);
+      if (saved) {
+        cart = JSON.parse(saved);
+        updateCartBadge();
+      }
+    }
+
+    function saveCart() {
+      localStorage.setItem('cart_' + currentUser.id, JSON.stringify(cart));
+      updateCartBadge();
+    }
+
+    function addToCart(product) {
+      const existing = cart.find(item => item.id === product.id);
+      if (existing) {
+        existing.quantity++;
+      } else {
+        cart.push({...product, quantity: 1});
+      }
+      saveCart();
+      tg.HapticFeedback.notificationOccurred('success');
+      tg.showAlert('Товар додано до кошика! 🛒');
+    }
+
+    function removeFromCart(productId) {
+      cart = cart.filter(item => item.id !== productId);
+      saveCart();
+      displayCart();
+    }
+
+    function updateCartBadge() {
+      const badge = document.getElementById('cartCount');
+      const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+      if (total > 0) {
+        badge.textContent = total;
+        badge.style.display = 'block';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    function displayCart() {
+      const container = document.getElementById('cartItems');
+      const totalContainer = document.getElementById('cartTotal');
+      const checkoutBtn = document.getElementById('checkoutBtn');
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🛒</div>
+            <h3>Кошик порожній</h3>
+            <p>Додайте товари з маркетплейсу</p>
+          </div>
+        `;
+        totalContainer.innerHTML = '';
+        checkoutBtn.style.display = 'none';
+        return;
+      }
+
+      container.innerHTML = cart.map(item => `
+        <div class="cart-item">
+          <div>
+            <strong>${escapeHtml(item.name)}</strong>
+            <div style="color: #999; font-size: 0.9em;">
+              ${item.quantity} × ${item.price} ₴ = ${(item.quantity * item.price).toFixed(2)} ₴
+            </div>
+          </div>
+          <button class="danger" onclick='removeFromCart("${item.id}")' style="padding: 8px 16px;">
+            🗑️
+          </button>
+        </div>
+      `).join('');
+
+      const total = cart.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+      totalContainer.innerHTML = `
+        <div class="cart-total">
+          <span>Всього:</span>
+          <span>${total.toFixed(2)} ₴</span>
+        </div>
+      `;
+      checkoutBtn.style.display = 'block';
+    }
+
+    function checkout() {
+      const total = cart.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+      tg.showPopup({
+        title: 'Оформлення замовлення',
+        message: `Загальна сума: ${total.toFixed(2)} ₴\n\nПродовжити оформлення?`,
+        buttons: [
+          {id: 'confirm', type: 'default', text: 'Так, оформити'},
+          {type: 'cancel'}
+        ]
+      }, (buttonId) => {
+        if (buttonId === 'confirm') {
+          cart = [];
+          saveCart();
+          displayCart();
+          tg.showAlert('Замовлення успішно оформлено! 🎉\n\nЗ вами зв\'яжеться продавець.');
+          tg.HapticFeedback.notificationOccurred('success');
+        }
+      });
+    }
+
+    function viewProduct(product) {
+      const imageInfo = product.images && product.images.length > 0 
+        ? `\n\n📸 Фото: ${product.images.length} шт.` 
+        : '';
+      
+      tg.showPopup({
+        title: product.name,
+        message: `${product.description || 'Без опису'}\n\nЦіна: ${product.price} ₴\nПродавець: ${product.sellerName}${imageInfo}`,
+        buttons: [{type: 'close'}]
+      });
+    }
+
+    // Image modal functions
+    function openImageModal(imageSrc) {
+      const modal = document.getElementById('imageModal');
+      const modalImage = document.getElementById('modalImage');
+      modalImage.src = imageSrc;
+      modal.classList.add('active');
+      tg.HapticFeedback.impactOccurred('light');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('imageModal');
+      modal.classList.remove('active');
+    }
+
+    document.getElementById('imageModal').addEventListener('click', (e) => {
+      if (e.target.id === 'imageModal') {
+        closeModal();
+      }
+    });
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    tg.BackButton.show();
+    tg.BackButton.onClick(() => tg.close());
