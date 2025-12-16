@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      font-weight: 700;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 8px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      font-size: 0.9em;
+      margin-top: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .status.active {
+      background: rgba(76, 175, 80, 0.2);
+      border-color: rgba(76, 175, 80, 0.4);
+      color: #4caf50;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .card h2 {
+      font-size: 1.4em;
+      margin-bottom: 16px;
+      color: #ffffff;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      color: #999;
+      font-size: 0.9em;
+    }
+
+    .info-value {
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 16px 24px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      font-size: 1em;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button.primary {
+      background: linear-gradient(135deg, #ffffff 0%, #d0d0d0 100%);
+      color: #000000;
+      border: none;
+    }
+
+    button.primary:hover {
+      background: linear-gradient(135deg, #f0f0f0 0%, #c0c0c0 100%);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+    }
+
+    .counter {
+      text-align: center;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .counter-value {
+      font-size: 4em;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 20px 0;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      color: #666;
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 480px) {
+      .header h1 {
+        font-size: 2em;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+      
+      .counter-value {
+        font-size: 3em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🚀 Mini App</h1>
+      <div class="status active" id="status">● Активний</div>
+    </div>
+
+    <div class="card">
+      <h2>📊 Інформація про користувача</h2>
+      <div class="info-row">
+        <span class="info-label">Ім'я</span>
+        <span class="info-value" id="userName">Завантаження...</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">ID</span>
+        <span class="info-value" id="userId">-</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Платформа</span>
+        <span class="info-value" id="platform">-</span>
+      </div>
+    </div>
+
+    <div class="card counter">
+      <h2>🎯 Лічильник</h2>
+      <div class="counter-value" id="counter">0</div>
+      <div class="button-group">
+        <button onclick="decrementCounter()">➖ Зменшити</button>
+        <button class="primary" onclick="incrementCounter()">➕ Збільшити</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>⚙️ Дії</h2>
+      <div class="button-group">
+        <button onclick="showAlert()">💬 Повідомлення</button>
+        <button onclick="vibrate()">📳 Вібрація</button>
+        <button onclick="shareApp()">📤 Поділитися</button>
+        <button class="primary" onclick="closeApp()">✕ Закрити</button>
+      </div>
+    </div>
+
+    <div class="footer">
+      Powered by Telegram Mini Apps
+    </div>
+  </div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    let counter = 0;
+
+    // Ініціалізація
+    tg.ready();
+    tg.expand();
+
+    // Налаштування теми
+    document.body.style.backgroundColor = tg.themeParams.bg_color || '#000000';
+    
+    // Отримання даних користувача
+    if (tg.initDataUnsafe.user) {
+      const user = tg.initDataUnsafe.user;
+      document.getElementById('userName').textContent = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+      document.getElementById('userId').textContent = user.id;
+    } else {
+      document.getElementById('userName').textContent = 'Гість';
+    }
+
+    // Платформа
+    document.getElementById('platform').textContent = tg.platform || 'Unknown';
+
+    // Функції лічильника
+    function incrementCounter() {
+      counter++;
+      updateCounter();
+      tg.HapticFeedback.impactOccurred('light');
+    }
+
+    function decrementCounter() {
+      counter--;
+      updateCounter();
+      tg.HapticFeedback.impactOccurred('light');
+    }
+
+    function updateCounter() {
+      document.getElementById('counter').textContent = counter;
+    }
+
+    // Функції дій
+    function showAlert() {
+      tg.showAlert('Це сповіщення від вашого Mini App! 🎉');
+    }
+
+    function vibrate() {
+      tg.HapticFeedback.notificationOccurred('success');
+      tg.showPopup({
+        title: 'Вібрація',
+        message: 'Ваш пристрій вібрує! 📳',
+        buttons: [{type: 'ok'}]
+      });
+    }
+
+    function shareApp() {
+      const shareUrl = 'https://t.me/share/url?url=' + encodeURIComponent(window.location.href) + 
+                       '&text=' + encodeURIComponent('Подивіться на цей крутий Mini App!');
+      tg.openLink(shareUrl);
+    }
+
+    function closeApp() {
+      tg.close();
+    }
+
+    // Кнопка "Назад"
+    tg.BackButton.onClick(() => {
+      tg.close();
+    });
+  </script>
+</body>
+</html>
