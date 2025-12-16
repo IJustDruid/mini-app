@@ -105,14 +105,14 @@
 
     .product-card {
       display: grid;
-      grid-template-columns: 120px 1fr;
+      grid-template-columns: 100px 1fr;
       gap: 16px;
       align-items: start;
     }
 
     .product-image {
-      width: 120px;
-      height: 120px;
+      width: 100px;
+      height: 100px;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 12px;
       display: flex;
@@ -120,14 +120,12 @@
       justify-content: center;
       font-size: 3em;
       overflow: hidden;
-      position: relative;
     }
 
     .product-image img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 12px;
     }
 
     .product-info h3 {
@@ -153,7 +151,6 @@
       display: flex;
       gap: 8px;
       margin-top: 12px;
-      flex-wrap: wrap;
     }
 
     button {
@@ -229,142 +226,36 @@
       background: rgba(255, 255, 255, 0.08);
     }
 
-    .image-upload-area {
-      border: 2px dashed rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      padding: 30px;
-      text-align: center;
+    .form-group input[type="file"] {
+      padding: 8px;
       cursor: pointer;
+    }
+
+    .form-group input[type="file"]::file-selector-button {
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      cursor: pointer;
+      margin-right: 12px;
       transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.03);
     }
 
-    .image-upload-area:hover {
-      border-color: rgba(255, 255, 255, 0.4);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .image-upload-area.dragover {
-      border-color: #4caf50;
-      background: rgba(76, 175, 80, 0.1);
-    }
-
-    #imageInput {
-      display: none;
-    }
-
-    .image-preview-container {
-      margin-top: 16px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 12px;
-    }
-
-    .image-preview {
-      position: relative;
-      width: 100%;
-      padding-bottom: 100%;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .image-preview img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .image-preview-remove {
-      position: absolute;
-      top: 4px;
-      right: 4px;
-      background: rgba(244, 67, 54, 0.9);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      font-size: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      z-index: 10;
-    }
-
-    .image-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .gallery-image {
-      width: 100%;
-      padding-bottom: 100%;
-      position: relative;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-    }
-
-    .gallery-image img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .modal.active {
-      display: flex;
-    }
-
-    .modal-content {
-      max-width: 90%;
-      max-height: 90%;
-      position: relative;
-    }
-
-    .modal-image {
-      max-width: 100%;
-      max-height: 80vh;
-      border-radius: 12px;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: -40px;
-      right: 0;
+    .form-group input[type="file"]::file-selector-button:hover {
       background: rgba(255, 255, 255, 0.2);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      font-size: 24px;
-      cursor: pointer;
+    }
+
+    #imagePreview {
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    #previewImg {
+      max-width: 100%;
+      border-radius: 12px;
+      max-height: 200px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .cart-badge {
@@ -426,8 +317,8 @@
 
     @media (max-width: 480px) {
       .header h1 { font-size: 2em; }
-      .product-card { grid-template-columns: 100px 1fr; gap: 12px; }
-      .product-image { width: 100px; height: 100px; font-size: 2.5em; }
+      .product-card { grid-template-columns: 80px 1fr; gap: 12px; }
+      .product-image { width: 80px; height: 80px; font-size: 2.5em; }
     }
   </style>
 </head>
@@ -460,17 +351,6 @@
         <h2 style="margin-bottom: 20px;">📦 Додати новий товар</h2>
         <form id="addProductForm">
           <div class="form-group">
-            <label>Фото товару (до 5 фото)</label>
-            <div class="image-upload-area" id="uploadArea">
-              <div style="font-size: 3em; margin-bottom: 12px;">📸</div>
-              <div style="color: #ccc; margin-bottom: 8px;">Натисніть або перетягніть фото сюди</div>
-              <div style="font-size: 0.85em; color: #666;">JPG, PNG, GIF (макс. 5MB)</div>
-            </div>
-            <input type="file" id="imageInput" accept="image/*" multiple>
-            <div id="imagePreviewContainer" class="image-preview-container"></div>
-          </div>
-          
-          <div class="form-group">
             <label>Назва товару *</label>
             <input type="text" id="productName" required placeholder="Наприклад: iPhone 14 Pro">
           </div>
@@ -483,8 +363,14 @@
             <input type="number" id="productPrice" required placeholder="0" min="0" step="0.01">
           </div>
           <div class="form-group">
-            <label>Емодзі (іконка товару)</label>
-            <input type="text" id="productEmoji" placeholder="📱" maxlength="2">
+            <label>Фото товару</label>
+            <input type="file" id="productImage" accept="image/*" onchange="previewImage(event)">
+            <div id="imagePreview" style="display: none;">
+              <img id="previewImg" alt="Preview">
+              <button type="button" onclick="clearImage()" style="margin-top: 8px; width: 100%;" class="danger">
+                🗑️ Видалити фото
+              </button>
+            </div>
           </div>
           <button type="submit" class="primary" style="width: 100%; padding: 16px;">
             ✅ Опублікувати товар
@@ -511,19 +397,11 @@
     </div>
   </div>
 
-  <!-- Image Modal -->
-  <div id="imageModal" class="modal">
-    <div class="modal-content">
-      <button class="modal-close" onclick="closeModal()">×</button>
-      <img id="modalImage" class="modal-image" src="" alt="Product">
-    </div>
-  </div>
-
   <script>
     const tg = window.Telegram.WebApp;
     let currentUser = null;
     let cart = [];
-    let uploadedImages = [];
+    let currentImageData = null;
 
     tg.ready();
     tg.expand();
@@ -538,81 +416,31 @@
     // Initialize
     loadProducts();
     loadCart();
-    setupImageUpload();
 
-    // Image upload setup
-    function setupImageUpload() {
-      const uploadArea = document.getElementById('uploadArea');
-      const imageInput = document.getElementById('imageInput');
-
-      uploadArea.addEventListener('click', () => imageInput.click());
-
-      uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.classList.add('dragover');
-      });
-
-      uploadArea.addEventListener('dragleave', () => {
-        uploadArea.classList.remove('dragover');
-      });
-
-      uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.classList.remove('dragover');
-        handleFiles(e.dataTransfer.files);
-      });
-
-      imageInput.addEventListener('change', (e) => {
-        handleFiles(e.target.files);
-      });
-    }
-
-    function handleFiles(files) {
-      const maxFiles = 5;
-      const maxSize = 5 * 1024 * 1024; // 5MB
-
-      if (uploadedImages.length >= maxFiles) {
-        tg.showAlert(`Можна завантажити максимум ${maxFiles} фото`);
-        return;
-      }
-
-      Array.from(files).forEach(file => {
-        if (uploadedImages.length >= maxFiles) return;
-
-        if (!file.type.startsWith('image/')) {
-          tg.showAlert('Можна завантажувати тільки зображення');
-          return;
-        }
-
-        if (file.size > maxSize) {
-          tg.showAlert('Розмір файлу не повинен перевищувати 5MB');
+    // Image preview functions
+    function previewImage(event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+          tg.showAlert('Файл занадто великий! Максимальний розмір: 5MB');
+          event.target.value = '';
           return;
         }
 
         const reader = new FileReader();
-        reader.onload = (e) => {
-          uploadedImages.push(e.target.result);
-          displayImagePreviews();
-          tg.HapticFeedback.impactOccurred('light');
+        reader.onload = function(e) {
+          currentImageData = e.target.result;
+          document.getElementById('previewImg').src = currentImageData;
+          document.getElementById('imagePreview').style.display = 'block';
         };
         reader.readAsDataURL(file);
-      });
+      }
     }
 
-    function displayImagePreviews() {
-      const container = document.getElementById('imagePreviewContainer');
-      container.innerHTML = uploadedImages.map((img, index) => `
-        <div class="image-preview">
-          <img src="${img}" alt="Preview ${index + 1}">
-          <button class="image-preview-remove" onclick="removeImage(${index})">×</button>
-        </div>
-      `).join('');
-    }
-
-    function removeImage(index) {
-      uploadedImages.splice(index, 1);
-      displayImagePreviews();
-      tg.HapticFeedback.impactOccurred('light');
+    function clearImage() {
+      currentImageData = null;
+      document.getElementById('productImage').value = '';
+      document.getElementById('imagePreview').style.display = 'none';
     }
 
     // Tab switching
@@ -684,47 +512,29 @@
         return;
       }
 
-      container.innerHTML = products.map(product => {
-        const mainImage = product.images && product.images.length > 0 
-          ? `<img src="${product.images[0]}" alt="${escapeHtml(product.name)}">`
-          : product.emoji || '📦';
-        
-        const imageGallery = product.images && product.images.length > 1
-          ? `<div class="image-gallery">
-              ${product.images.slice(1, 4).map((img, idx) => `
-                <div class="gallery-image" onclick='openImageModal("${img}")'>
-                  <img src="${img}" alt="Image ${idx + 2}">
-                </div>
-              `).join('')}
-              ${product.images.length > 4 ? `<div class="gallery-image" style="background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: 700;">+${product.images.length - 4}</div>` : ''}
-            </div>`
-          : '';
-
-        return `
-          <div class="card">
-            <div class="product-card">
-              <div class="product-image" ${product.images && product.images.length > 0 ? `onclick='openImageModal("${product.images[0]}")'` : ''} style="${product.images && product.images.length > 0 ? 'cursor: pointer;' : ''}">
-                ${mainImage}
-              </div>
-              <div class="product-info">
-                <h3>${escapeHtml(product.name)}</h3>
-                <div class="product-seller">👤 ${escapeHtml(product.sellerName)}</div>
-                <p style="color: #ccc; font-size: 0.9em; margin-bottom: 8px;">${escapeHtml(product.description || '')}</p>
-                ${imageGallery}
-                <div class="product-price">${product.price} ₴</div>
-                <div class="product-actions">
-                  <button class="primary" onclick='addToCart(${JSON.stringify(product).replace(/'/g, "&apos;")})'>
-                    🛒 В кошик
-                  </button>
-                  <button class="secondary" onclick='viewProduct(${JSON.stringify(product).replace(/'/g, "&apos;")})'>
-                    👁️ Детальніше
-                  </button>
-                </div>
+      container.innerHTML = products.map(product => `
+        <div class="card">
+          <div class="product-card">
+            <div class="product-image">
+              ${product.image ? `<img src="${product.image}" alt="${escapeHtml(product.name)}">` : (product.emoji || '📦')}
+            </div>
+            <div class="product-info">
+              <h3>${escapeHtml(product.name)}</h3>
+              <div class="product-seller">👤 ${escapeHtml(product.sellerName)}</div>
+              <p style="color: #ccc; font-size: 0.9em; margin-bottom: 8px;">${escapeHtml(product.description || '')}</p>
+              <div class="product-price">${product.price} ₴</div>
+              <div class="product-actions">
+                <button class="primary" onclick='addToCart(${JSON.stringify(product).replace(/'/g, "&apos;")})'>
+                  🛒 В кошик
+                </button>
+                <button class="secondary" onclick='viewProduct(${JSON.stringify(product).replace(/'/g, "&apos;")})'>
+                  👁️ Детальніше
+                </button>
               </div>
             </div>
           </div>
-        `;
-      }).join('');
+        </div>
+      `).join('');
     }
 
     // Add product form
@@ -734,7 +544,6 @@
       const name = document.getElementById('productName').value.trim();
       const description = document.getElementById('productDescription').value.trim();
       const price = parseFloat(document.getElementById('productPrice').value);
-      const emoji = document.getElementById('productEmoji').value.trim() || '📦';
 
       if (!name || price <= 0) {
         tg.showAlert('Будь ласка, заповніть всі обов\'язкові поля');
@@ -746,8 +555,8 @@
         name,
         description,
         price,
-        emoji,
-        images: uploadedImages,
+        image: currentImageData,
+        emoji: currentImageData ? null : '📦',
         sellerId: currentUser.id,
         sellerName: currentUser.first_name,
         timestamp: Date.now()
@@ -763,8 +572,7 @@
         });
 
         document.getElementById('addProductForm').reset();
-        uploadedImages = [];
-        displayImagePreviews();
+        clearImage();
         tg.HapticFeedback.notificationOccurred('success');
         
         switchTab('products');
@@ -833,32 +641,25 @@
 
     // Display my products
     function displayMyProducts(products, container) {
-      container.innerHTML = products.map(product => {
-        const mainImage = product.images && product.images.length > 0 
-          ? `<img src="${product.images[0]}" alt="${escapeHtml(product.name)}">`
-          : product.emoji || '📦';
-
-        return `
-          <div class="card">
-            <div class="product-card">
-              <div class="product-image">
-                ${mainImage}
-              </div>
-              <div class="product-info">
-                <h3>${escapeHtml(product.name)}</h3>
-                <p style="color: #ccc; font-size: 0.9em; margin-bottom: 8px;">${escapeHtml(product.description || '')}</p>
-                ${product.images && product.images.length > 0 ? `<div style="font-size: 0.85em; color: #999; margin-bottom: 8px;">📸 ${product.images.length} фото</div>` : ''}
-                <div class="product-price">${product.price} ₴</div>
-                <div class="product-actions">
-                  <button class="danger" onclick='deleteProduct("${product.id}")'>
-                    🗑️ Видалити
-                  </button>
-                </div>
+      container.innerHTML = products.map(product => `
+        <div class="card">
+          <div class="product-card">
+            <div class="product-image">
+              ${product.image ? `<img src="${product.image}" alt="${escapeHtml(product.name)}">` : (product.emoji || '📦')}
+            </div>
+            <div class="product-info">
+              <h3>${escapeHtml(product.name)}</h3>
+              <p style="color: #ccc; font-size: 0.9em; margin-bottom: 8px;">${escapeHtml(product.description || '')}</p>
+              <div class="product-price">${product.price} ₴</div>
+              <div class="product-actions">
+                <button class="danger" onclick='deleteProduct("${product.id}")'>
+                  🗑️ Видалити
+                </button>
               </div>
             </div>
           </div>
-        `;
-      }).join('');
+        </div>
+      `).join('');
     }
 
     // Delete product
@@ -989,36 +790,12 @@
     }
 
     function viewProduct(product) {
-      const imageInfo = product.images && product.images.length > 0 
-        ? `\n\n📸 Фото: ${product.images.length} шт.` 
-        : '';
-      
       tg.showPopup({
         title: product.name,
-        message: `${product.description || 'Без опису'}\n\nЦіна: ${product.price} ₴\nПродавець: ${product.sellerName}${imageInfo}`,
+        message: `${product.description || 'Без опису'}\n\nЦіна: ${product.price} ₴\nПродавець: ${product.sellerName}`,
         buttons: [{type: 'close'}]
       });
     }
-
-    // Image modal functions
-    function openImageModal(imageSrc) {
-      const modal = document.getElementById('imageModal');
-      const modalImage = document.getElementById('modalImage');
-      modalImage.src = imageSrc;
-      modal.classList.add('active');
-      tg.HapticFeedback.impactOccurred('light');
-    }
-
-    function closeModal() {
-      const modal = document.getElementById('imageModal');
-      modal.classList.remove('active');
-    }
-
-    document.getElementById('imageModal').addEventListener('click', (e) => {
-      if (e.target.id === 'imageModal') {
-        closeModal();
-      }
-    });
 
     function escapeHtml(text) {
       const div = document.createElement('div');
@@ -1028,3 +805,6 @@
 
     tg.BackButton.show();
     tg.BackButton.onClick(() => tg.close());
+  </script>
+</body>
+</html>
